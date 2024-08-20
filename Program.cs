@@ -1,17 +1,30 @@
-﻿using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
+using System.Threading.Tasks;
 class Program
 {
     static Timer? _timer;
-    static async Task Main()
+    static async Task Main(string[] args)
     {
         // Run a web server in a separate task
-
+        var webHostTask = CreateHostBuilder(args).Build().RunAsync();
         // Run email service logic
-        _timer = new Timer(async _ => await RunEmailService(), null, TimeSpan.Zero, TimeSpan.FromDays(1));
+        _timer = new Timer(async _ => await RunEmailService(), null, TimeSpan.Zero, TimeSpan.FromDays(7));
 
         // Wait for the web server to complete
+        await webHostTask;
 
     }
+
+    public static IHostBuilder CreateHostBuilder(string[] args) =>
+        Host.CreateDefaultBuilder(args)
+            .ConfigureWebHostDefaults(webBuilder =>
+            {
+                webBuilder.UseStartup<Startup>();
+            });
+
+
+
 
     static async Task RunEmailService()
     {
