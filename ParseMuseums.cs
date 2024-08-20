@@ -7,8 +7,8 @@ public class MuseumRequest
     public static async Task<Dictionary<string, Tuple<string, List<string>>>> ParseMuseums(string numDays = "7")
     {
 
-        //Current date
-        var date = DateTime.Now;
+        //Get current date in PST
+        var date = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time"));
         string dateString = $"{date.Month}/{date.Day}/{date.Year}";
 
         // Number of days
